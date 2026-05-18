@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 using SecureAppServiceApiLite.Api.Contracts;
 
-namespace SecureAppServiceApiLite.Api.Tests.Endpoints;
+namespace SecureAppServiceApiLite.Api.Tests.Validation;
 
 public sealed class CreateMessageEndpointTests : IClassFixture<WebApplicationFactory<Program>>
 {
@@ -36,9 +36,12 @@ public sealed class CreateMessageEndpointTests : IClassFixture<WebApplicationFac
     }
 
     [Fact]
-    public async Task PostMessages_ShouldReturnBadRequest_WhenSubjectIsMissing()
+    public async Task PostMessages_ShouldReturnBadRequest_WhenSubjectIsEmpty()
     {
-        var request = new { body = "Body value", priority = "Low" };
+        var request = new CreateMessageRequest(
+            Subject: string.Empty,
+            Body: "Body value",
+            Priority: "Low");
 
         var response = await _client.PostAsJsonAsync("/api/messages", request);
 
@@ -47,6 +50,23 @@ public sealed class CreateMessageEndpointTests : IClassFixture<WebApplicationFac
         var validationProblem = await response.Content.ReadFromJsonAsync<HttpValidationProblemDetails>();
         validationProblem.Should().NotBeNull();
         validationProblem!.Errors.Keys.Should().Contain(nameof(CreateMessageRequest.Subject));
+    }
+
+    [Fact]
+    public async Task PostMessages_ShouldReturnBadRequest_WhenBodyIsEmpty()
+    {
+        var request = new CreateMessageRequest(
+            Subject: "Subject",
+            Body: string.Empty,
+            Priority: "Low");
+
+        var response = await _client.PostAsJsonAsync("/api/messages", request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+        var validationProblem = await response.Content.ReadFromJsonAsync<HttpValidationProblemDetails>();
+        validationProblem.Should().NotBeNull();
+        validationProblem!.Errors.Keys.Should().Contain(nameof(CreateMessageRequest.Body));
     }
 
     [Fact]
