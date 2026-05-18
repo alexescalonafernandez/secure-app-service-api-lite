@@ -1,10 +1,14 @@
+using FluentValidation;
 using SecureAppServiceApiLite.Api.Contracts;
 using SecureAppServiceApiLite.Api.Messaging;
+using SecureAppServiceApiLite.Api.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddValidatorsFromAssemblyContaining<CreateMessageRequestValidator>();
 
 builder.Services.AddSingleton<IMessageQueue, InMemoryMessageQueue>();
 
@@ -25,9 +29,17 @@ app.MapGet("/health", () => Results.Ok(new
 
 app.MapPost("/api/messages", async (
     CreateMessageRequest request,
+    IValidator<CreateMessageRequest> validator,
     IMessageQueue messageQueue,
     CancellationToken cancellationToken) =>
 {
+    var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+    if (!validationResult.IsValid)
+    {
+        return Results.ValidationProblem(validationResult.ToDictionary());
+    }
+
     var message = new QueuedMessage(
         Id: Guid.NewGuid(),
         Subject: request.Subject,
