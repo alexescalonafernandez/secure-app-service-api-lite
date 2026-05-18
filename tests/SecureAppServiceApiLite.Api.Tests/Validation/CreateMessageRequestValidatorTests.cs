@@ -2,7 +2,7 @@ using FluentAssertions;
 using SecureAppServiceApiLite.Api.Contracts;
 using SecureAppServiceApiLite.Api.Validation;
 
-namespace SecureAppServiceApiLite.Api.Tests;
+namespace SecureAppServiceApiLite.Api.Tests.Validation;
 
 public sealed class CreateMessageRequestValidatorTests
 {

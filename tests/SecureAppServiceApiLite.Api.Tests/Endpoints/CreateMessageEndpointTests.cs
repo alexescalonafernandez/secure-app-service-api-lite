@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 using SecureAppServiceApiLite.Api.Contracts;
 
-namespace SecureAppServiceApiLite.Api.Tests.Validation;
+namespace SecureAppServiceApiLite.Api.Tests.Endpoints;
 
 public sealed class CreateMessageEndpointTests : IClassFixture<WebApplicationFactory<Program>>
 {
