@@ -1,16 +1,17 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 using SecureAppServiceApiLite.Api.Contracts;
 
-namespace SecureAppServiceApiLite.Api.Tests;
+namespace SecureAppServiceApiLite.Api.Tests.Endpoints;
 
-public sealed class MessagesEndpointTests : IClassFixture<WebApplicationFactory<Program>>
+public sealed class CreateMessageEndpointTests : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly HttpClient _client;
 
-    public MessagesEndpointTests(WebApplicationFactory<Program> factory)
+    public CreateMessageEndpointTests(WebApplicationFactory<Program> factory)
     {
         _client = factory.CreateClient();
     }
