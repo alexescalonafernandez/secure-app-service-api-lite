@@ -1,0 +1,7 @@
+# Validate Bicep deployment at resource group scope.
+# Assumes the resource group already exists.
+$RG_NAME = "rg-b3-secure-api-dev-we-01"
+
+az deployment group validate `
+  --resource-group $RG_NAME `
+  --parameters infra/dev.bicepparam

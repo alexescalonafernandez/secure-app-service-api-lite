@@ -1,0 +1,7 @@
+# Preview Azure changes without applying them.
+# Assumes the resource group already exists.
+$RG_NAME = "rg-b3-secure-api-dev-we-01"
+
+az deployment group what-if `
+  --resource-group $RG_NAME `
+  --parameters infra/dev.bicepparam
