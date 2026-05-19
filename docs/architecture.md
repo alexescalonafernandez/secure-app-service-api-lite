@@ -24,34 +24,39 @@ flowchart LR
 ```
 
 ## Future Azure architecture preview
-The target architecture will keep API contracts stable while swapping local infrastructure for Azure services:
-- API hosted on Azure App Service.
+The next Azure milestones will keep API contracts stable while replacing the local fake queue with Azure infrastructure:
+- API hosted on Azure App Service Linux.
 - Queue abstraction implemented using Azure Storage Queue.
-- Secrets/config handled through Managed Identity + Key Vault.
+- Access to Storage Queue through Managed Identity and RBAC.
 - Observability expanded with Application Insights.
-- Infra managed with Bicep and automated through CI/CD.
+- Infrastructure managed with Bicep.
+- GitHub Actions may be introduced later as an optional delivery milestone.
+- Key Vault is intentionally deferred until there is a real secret/configuration management need.
 
 ### Mermaid - future Azure architecture preview
 ```mermaid
 flowchart LR
     Client[Client]
-    AppService[Azure App Service\nMinimal API]
+    AppService[Azure App Service Linux\nMinimal API]
     Validator[FluentValidation]
     QueueAbstraction[IMessageQueue]
+    ManagedIdentity[Managed Identity]
+    RBAC[Azure RBAC]
     StorageQueue[Azure Storage Queue]
-    KeyVault[Azure Key Vault]
-    MI[Managed Identity]
     AppInsights[Application Insights]
     Bicep[Bicep IaC]
-    GitHub[GitHub Actions]
 
     Client -->|HTTPS| AppService
     AppService --> Validator
-    AppService --> QueueAbstraction --> StorageQueue
-    AppService --> MI --> KeyVault
+    AppService --> QueueAbstraction
+    AppService --> ManagedIdentity
+    ManagedIdentity --> RBAC
+    RBAC --> StorageQueue
+    QueueAbstraction --> StorageQueue
     AppService --> AppInsights
-    GitHub -->|Deploy| AppService
-    GitHub -->|Provision| Bicep
+    Bicep -->|Provision| AppService
+    Bicep -->|Provision| StorageQueue
+    Bicep -->|Provision| AppInsights
 ```
 
 ## `IMessageQueue` explanation
