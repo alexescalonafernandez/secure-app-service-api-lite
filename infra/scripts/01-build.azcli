@@ -1,0 +1,5 @@
+# Build main Bicep template
+az bicep build --file infra/main.bicep --stdout
+
+# Build Bicep parameters file
+az bicep build-params --file infra/dev.bicepparam --stdout

@@ -1,0 +1,23 @@
+# 1. Show Azure CLI version.
+az version --output table
+
+# 2. Show the currently active Azure account and subscription.
+az account show --output table
+
+# 3. List all available subscriptions.
+az account list --output table
+
+# 4. Show the active subscription ID only.
+az account show --query id --output tsv
+
+# 5. Show the active subscription name only.
+az account show --query name --output tsv
+
+# 6. Optional: Create the Resource Group if it does not already exist.
+$RG_NAME = "rg-b3-secure-api-dev-we-01"
+$LOCATION = "westeurope"
+
+az group create `
+  --name $RG_NAME `
+  --location $LOCATION `
+  --output table
