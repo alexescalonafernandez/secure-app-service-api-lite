@@ -37,8 +37,7 @@ The next Azure milestones will keep API contracts stable while replacing the loc
 ```mermaid
 flowchart LR
     Client[Client]
-    AppService[Azure App Service Linux
-Minimal API]
+    AppService[Azure App Service Linux\nMinimal API]
     Validator[FluentValidation]
     QueueAbstraction[IMessageQueue]
     ManagedIdentity[Managed Identity]
