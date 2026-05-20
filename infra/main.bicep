@@ -26,7 +26,6 @@ var appServiceName = 'app-${resourcePrefix}'
 var logAnalyticsWorkspaceName = 'log-${resourcePrefix}'
 var applicationInsightsName = 'appi-${resourcePrefix}'
 
-
 module storage 'modules/storage.bicep' = {
   name: 'storage'
   params: {
@@ -45,10 +44,24 @@ module observability 'modules/observability.bicep' = {
   }
 }
 
+module appService 'modules/app-service.bicep' = {
+  name: 'app-service'
+  params: {
+    location: location
+    appServicePlanName: appServicePlanName
+    appServiceName: appServiceName
+    storageAccountName: storage.outputs.storageAccountName
+    queueName: storage.outputs.queueName
+    applicationInsightsConnectionString: observability.outputs.applicationInsightsConnectionString
+  }
+}
+
 output storageAccountName string = storage.outputs.storageAccountName
 output queueName string = storage.outputs.queueName
-output plannedAppServicePlanName string = appServicePlanName
-output plannedAppServiceName string = appServiceName
+output appServicePlanName string = appService.outputs.appServicePlanName
+output appServiceName string = appService.outputs.appServiceName
+output appServiceDefaultHostName string = appService.outputs.appServiceDefaultHostName
+output appServicePrincipalId string = appService.outputs.appServicePrincipalId
 output logAnalyticsWorkspaceName string = observability.outputs.logAnalyticsWorkspaceName
 output applicationInsightsName string = observability.outputs.applicationInsightsName
 output applicationInsightsConnectionString string = observability.outputs.applicationInsightsConnectionString
