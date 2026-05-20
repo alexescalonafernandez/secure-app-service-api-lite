@@ -36,9 +36,19 @@ module storage 'modules/storage.bicep' = {
   }
 }
 
+module observability 'modules/observability.bicep' = {
+  name: 'observability'
+  params: {
+    location: location
+    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
+    applicationInsightsName: applicationInsightsName
+  }
+}
+
 output storageAccountName string = storage.outputs.storageAccountName
 output queueName string = storage.outputs.queueName
 output plannedAppServicePlanName string = appServicePlanName
 output plannedAppServiceName string = appServiceName
-output plannedLogAnalyticsWorkspaceName string = logAnalyticsWorkspaceName
-output plannedApplicationInsightsName string = applicationInsightsName
+output logAnalyticsWorkspaceName string = observability.outputs.logAnalyticsWorkspaceName
+output applicationInsightsName string = observability.outputs.applicationInsightsName
+output applicationInsightsConnectionString string = observability.outputs.applicationInsightsConnectionString
