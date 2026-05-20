@@ -26,8 +26,18 @@ var appServiceName = 'app-${resourcePrefix}'
 var logAnalyticsWorkspaceName = 'log-${resourcePrefix}'
 var applicationInsightsName = 'appi-${resourcePrefix}'
 
-output plannedStorageAccountName string = storageAccountName
-output plannedQueueName string = queueName
+
+module storage 'modules/storage.bicep' = {
+  name: 'storage'
+  params: {
+    location: location
+    storageAccountName: storageAccountName
+    queueName: queueName
+  }
+}
+
+output storageAccountName string = storage.outputs.storageAccountName
+output queueName string = storage.outputs.queueName
 output plannedAppServicePlanName string = appServicePlanName
 output plannedAppServiceName string = appServiceName
 output plannedLogAnalyticsWorkspaceName string = logAnalyticsWorkspaceName
