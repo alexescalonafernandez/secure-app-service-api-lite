@@ -8,7 +8,9 @@ B3.E1 infrastructure baseline for Secure App Service API Lite.
 
 This milestone defines naming, parameters, and repeatable Azure CLI scripts.
 
-No Azure application resources are created by `main.bicep` yet. The `00-account-context.azcli` script includes an explicit resource group creation command that should be executed intentionally when needed.
+`main.bicep` provisions the current B3.E1 infrastructure skeleton: Storage Queue, observability resources, Linux App Service Plan, and Linux Web App. Application deployment, RBAC role assignments, Key Vault, and GitHub Actions are intentionally out of scope for this milestone.
+
+The `00-account-context.azcli` script includes an explicit resource group creation command that should be executed intentionally when needed.
 
 ## Files
 
@@ -18,6 +20,9 @@ No Azure application resources are created by `main.bicep` yet. The `00-account-
 - `scripts/01-build.azcli`
 - `scripts/02-validate.azcli`
 - `scripts/03-what-if.azcli`
+- `scripts/04-deploy.azcli`
+- `scripts/05-inspect.azcli`
+- `scripts/99-teardown.azcli`
 
 ## Execution environment
 
@@ -45,6 +50,9 @@ Recommended order:
 2. Run `scripts/01-build.azcli` to compile `main.bicep` and `dev.bicepparam`.
 3. Run `scripts/02-validate.azcli` to validate the deployment at resource group scope.
 4. Run `scripts/03-what-if.azcli` to preview Azure changes without applying them.
+5. Run `scripts/04-deploy.azcli` to deploy the infrastructure.
+6. Run `scripts/05-inspect.azcli` to inspect deployed resources.
+7. Run `scripts/99-teardown.azcli` to delete the resource group and avoid ongoing cost.
 
 ## Notes
 
@@ -52,4 +60,5 @@ Recommended order:
 - No GitHub Actions yet.
 - No Azure SDK integration yet.
 - No application deployment yet.
-- No Azure application resources are deployed in this baseline commit.
+- Infrastructure deployment is manual and performed through `.azcli` scripts.
+- `99-teardown.azcli` deletes the full dev resource group to avoid ongoing cost.
