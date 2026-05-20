@@ -1,0 +1,32 @@
+# Inspect deployed B3.E1 Azure resources.
+
+$RG_NAME = "rg-b3-secure-api-dev-we-01"
+$APP_NAME = "app-b3-secure-api-dev-we-01"
+$STORAGE_ACCOUNT_NAME = "stb3sapidevwe01"
+$QUEUE_NAME = "incoming-messages"
+
+# List resources in the resource group.
+az resource list `
+  --resource-group $RG_NAME `
+  --output table
+
+# Show App Service summary.
+az webapp show `
+  --resource-group $RG_NAME `
+  --name $APP_NAME `
+  --query "{name:name, state:state, defaultHostName:defaultHostName, httpsOnly:httpsOnly, identity:identity.type}" `
+  --output table
+
+# Show App Service app settings names.
+az webapp config appsettings list `
+  --resource-group $RG_NAME `
+  --name $APP_NAME `
+  --query "[].name" `
+  --output table
+
+# Show Storage Queue exists.
+az storage queue exists `
+  --account-name $STORAGE_ACCOUNT_NAME `
+  --name $QUEUE_NAME `
+  --auth-mode login `
+  --output table

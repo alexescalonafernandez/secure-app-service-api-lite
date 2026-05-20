@@ -1,0 +1,8 @@
+# Delete the B3.E1 resource group and all contained resources.
+# Use intentionally. This removes all Azure resources created for this project environment.
+
+$RG_NAME = "rg-b3-secure-api-dev-we-01"
+
+az group delete `
+  --name $RG_NAME `
+  --yes
