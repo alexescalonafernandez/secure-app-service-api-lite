@@ -73,16 +73,17 @@ From repository root:
 dotnet test
 ```
 
-## Out of scope for B3.E0
-The following are intentionally not included yet:
-- Azure SDK integration.
-- Azure resource provisioning.
-- Bicep templates.
+## Still out of scope
+The following are intentionally not included yet after B3.E1:
+- Application deployment to Azure App Service.
+- Azure SDK integration in application code.
+- RBAC role assignments (including Managed Identity to Storage Queue).
 - Key Vault integration.
 - GitHub Actions CI/CD.
+- Production networking hardening (private endpoints, custom domains, advanced network controls).
 
 ## Next milestone preview
-Next milestone will replace local-only foundations with Azure-connected building blocks, including a real queue integration path and deployment infrastructure steps.
+B3.E2 - Managed Identity + RBAC + real Azure Storage Queue integration path.
 
 ---
 
