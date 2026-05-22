@@ -56,6 +56,14 @@ module appService 'modules/app-service.bicep' = {
   }
 }
 
+module rbac 'modules/rbac.bicep' = {
+  name: 'rbac'
+  params: {
+    principalId: appService.outputs.appServicePrincipalId
+    storageAccountName: storage.outputs.storageAccountName
+  }
+}
+
 output storageAccountName string = storage.outputs.storageAccountName
 output queueName string = storage.outputs.queueName
 output appServicePlanName string = appService.outputs.appServicePlanName
@@ -65,3 +73,4 @@ output appServicePrincipalId string = appService.outputs.appServicePrincipalId
 output logAnalyticsWorkspaceName string = observability.outputs.logAnalyticsWorkspaceName
 output applicationInsightsName string = observability.outputs.applicationInsightsName
 output applicationInsightsConnectionString string = observability.outputs.applicationInsightsConnectionString
+output storageQueueDataContributorRoleAssignmentName string = rbac.outputs.storageQueueDataContributorRoleAssignmentName
