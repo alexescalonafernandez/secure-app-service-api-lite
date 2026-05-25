@@ -10,7 +10,21 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddValidatorsFromAssemblyContaining<CreateMessageRequestValidator>();
 
-builder.Services.AddSingleton<IMessageQueue, InMemoryMessageQueue>();
+builder.Services.Configure<QueueOptions>(
+    builder.Configuration.GetSection(QueueOptions.SectionName));
+
+var queueProvider = builder.Configuration
+    .GetSection(QueueOptions.SectionName)
+    .GetValue<string>("Provider") ?? "InMemory";
+
+if (string.Equals(queueProvider, "AzureStorage", StringComparison.OrdinalIgnoreCase))
+{
+    builder.Services.AddSingleton<IMessageQueue, AzureStorageMessageQueue>();
+}
+else
+{
+    builder.Services.AddSingleton<IMessageQueue, InMemoryMessageQueue>();
+}
 
 var app = builder.Build();
 
