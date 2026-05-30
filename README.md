@@ -5,13 +5,14 @@ Secure App Service API Lite is **Project B3** of the Azure Projects + AI Deliver
 Its goal is to build a lightweight, AZ-204-oriented ASP.NET Core Minimal API that can evolve from local development to Azure-hosted production patterns.
 
 ## Current milestone
-**B3.E1 - Azure infrastructure skeleton with Bicep (complete)**
+**B3.E2 - Managed Identity + RBAC + real Azure Storage Queue integration path (complete)**
 
 ## Milestone status
 - **B3.E0 - Project foundation + local Minimal API**: complete.
 - **B3.E1 - Azure infrastructure skeleton with Bicep**: complete.
+- **B3.E2 - Managed Identity + RBAC + real Azure Storage Queue integration path**: complete.
 
-B3.E1 adds Bicep-based Azure infrastructure for Storage Queue, Application Insights, Log Analytics, Linux App Service Plan, Linux Web App, and a system-assigned Managed Identity. Deployment remains manual through `infra/scripts/*.azcli`, while application deployment and RBAC assignment are intentionally deferred.
+B3.E2 introduces Managed Identity/RBAC and the real Azure Storage Queue implementation path. Live end-to-end Azure validation is intentionally deferred to B3.E3.
 
 ## Current implemented scope
 At this stage, the repository includes:
@@ -74,16 +75,14 @@ dotnet test
 ```
 
 ## Still out of scope
-The following are intentionally not included yet after B3.E1:
-- Application deployment to Azure App Service.
-- Azure SDK integration in application code.
-- RBAC role assignments (including Managed Identity to Storage Queue).
+The following are intentionally not included yet after B3.E2:
+- Application deployment automation and live end-to-end Azure queue validation.
 - Key Vault integration.
-- GitHub Actions CI/CD.
+- GitHub Actions CI/CD and OIDC deployment identity.
 - Production networking hardening (private endpoints, custom domains, advanced network controls).
 
 ## Next milestone preview
-B3.E2 - Managed Identity + RBAC + real Azure Storage Queue integration path.
+B3.E3 - GitHub Actions deployment with OIDC.
 
 ---
 
