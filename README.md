@@ -5,14 +5,15 @@ Secure App Service API Lite is **Project B3** of the Azure Projects + AI Deliver
 Its goal is to build a lightweight, AZ-204-oriented ASP.NET Core Minimal API that can evolve from local development to Azure-hosted production patterns.
 
 ## Current milestone
-**B3.E2 - Managed Identity + RBAC + real Azure Storage Queue integration path (complete)**
+**B3.E3 - GitHub Actions deployment with OIDC (complete)**
 
 ## Milestone status
 - **B3.E0 - Project foundation + local Minimal API**: complete.
 - **B3.E1 - Azure infrastructure skeleton with Bicep**: complete.
 - **B3.E2 - Managed Identity + RBAC + real Azure Storage Queue integration path**: complete.
+- **B3.E3 - GitHub Actions deployment with OIDC**: complete.
 
-B3.E2 introduces Managed Identity/RBAC and the real Azure Storage Queue implementation path. Live end-to-end Azure validation is intentionally deferred to B3.E3.
+B3.E3 introduced GitHub Actions deployment with OIDC and validated the real Azure path from App Service to Storage Queue.
 
 ## Current implemented scope
 At this stage, the repository includes:
@@ -75,14 +76,13 @@ dotnet test
 ```
 
 ## Still out of scope
-The following are intentionally not included yet after B3.E2:
-- Application deployment automation and live end-to-end Azure queue validation.
+The following are intentionally not included yet after B3.E3:
+- Operational hardening and observability validation.
 - Key Vault integration.
-- GitHub Actions CI/CD and OIDC deployment identity.
 - Production networking hardening (private endpoints, custom domains, advanced network controls).
 
 ## Next milestone preview
-B3.E3 - GitHub Actions deployment with OIDC.
+B3.E4 - Operational hardening and observability validation.
 
 ---
 
