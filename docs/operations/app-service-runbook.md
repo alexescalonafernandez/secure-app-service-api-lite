@@ -15,6 +15,13 @@ This runbook describes how to perform basic operational validation and troublesh
 - Runtime identity: App Service system-assigned Managed Identity
 - Deployment identity: GitHub Actions OIDC identity
 
+## Application Insights checks
+
+Application telemetry requires:
+- `APPLICATIONINSIGHTS_CONNECTION_STRING` configured in App Service.
+- `Microsoft.ApplicationInsights.AspNetCore` package referenced by the API.
+- `builder.Services.AddApplicationInsightsTelemetry()` registered in `Program.cs`.
+
 ## Resource map
 
 ```text
@@ -23,3 +30,4 @@ GitHub Actions
   -> Managed Identity
   -> Azure Storage Queue
   -> Application Insights / Log Analytics
+```

@@ -24,12 +24,12 @@ public sealed class CreateMessageEndpointTests : IClassFixture<WebApplicationFac
             Body: "Order #123 has shipped.",
             Priority: "Normal");
 
-        var response = await _client.PostAsJsonAsync("/api/messages", request);
+        var response = await _client.PostAsJsonAsync("/api/messages", request, cancellationToken: TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.Accepted);
         response.Headers.Location.Should().NotBeNull();
 
-        var payload = await response.Content.ReadFromJsonAsync<CreateMessageResponse>();
+        var payload = await response.Content.ReadFromJsonAsync<CreateMessageResponse>(cancellationToken: TestContext.Current.CancellationToken);
         payload.Should().NotBeNull();
         payload!.Status.Should().Be("Accepted");
         payload.MessageId.Should().NotBe(Guid.Empty);
@@ -43,11 +43,11 @@ public sealed class CreateMessageEndpointTests : IClassFixture<WebApplicationFac
             Body: "Body value",
             Priority: "Low");
 
-        var response = await _client.PostAsJsonAsync("/api/messages", request);
+        var response = await _client.PostAsJsonAsync("/api/messages", request, cancellationToken: TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
-        var validationProblem = await response.Content.ReadFromJsonAsync<HttpValidationProblemDetails>();
+        var validationProblem = await response.Content.ReadFromJsonAsync<HttpValidationProblemDetails>(cancellationToken: TestContext.Current.CancellationToken);
         validationProblem.Should().NotBeNull();
         validationProblem!.Errors.Keys.Should().Contain(nameof(CreateMessageRequest.Subject));
     }
@@ -60,11 +60,11 @@ public sealed class CreateMessageEndpointTests : IClassFixture<WebApplicationFac
             Body: string.Empty,
             Priority: "Low");
 
-        var response = await _client.PostAsJsonAsync("/api/messages", request);
+        var response = await _client.PostAsJsonAsync("/api/messages", request, cancellationToken: TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
-        var validationProblem = await response.Content.ReadFromJsonAsync<HttpValidationProblemDetails>();
+        var validationProblem = await response.Content.ReadFromJsonAsync<HttpValidationProblemDetails>(cancellationToken: TestContext.Current.CancellationToken);
         validationProblem.Should().NotBeNull();
         validationProblem!.Errors.Keys.Should().Contain(nameof(CreateMessageRequest.Body));
     }
@@ -77,11 +77,11 @@ public sealed class CreateMessageEndpointTests : IClassFixture<WebApplicationFac
             Body: "Body",
             Priority: "Urgent");
 
-        var response = await _client.PostAsJsonAsync("/api/messages", request);
+        var response = await _client.PostAsJsonAsync("/api/messages", request, cancellationToken: TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
-        var validationProblem = await response.Content.ReadFromJsonAsync<HttpValidationProblemDetails>();
+        var validationProblem = await response.Content.ReadFromJsonAsync<HttpValidationProblemDetails>(cancellationToken: TestContext.Current.CancellationToken);
         validationProblem.Should().NotBeNull();
         validationProblem!.Errors.Keys.Should().Contain(nameof(CreateMessageRequest.Priority));
     }

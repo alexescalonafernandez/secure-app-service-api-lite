@@ -5,6 +5,15 @@ using SecureAppServiceApiLite.Api.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var applicationInsightsConnectionString =
+    builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]
+    ?? builder.Configuration["ApplicationInsights:ConnectionString"];
+
+if (!string.IsNullOrWhiteSpace(applicationInsightsConnectionString))
+{
+    builder.Services.AddApplicationInsightsTelemetry();
+}
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
