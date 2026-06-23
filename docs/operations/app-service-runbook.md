@@ -128,10 +128,10 @@ A valid message was previously confirmed manually in the Azure Portal under Stor
 
 Optional Azure CLI queue peek example:
 
-```bash
-az storage message peek \
-  --account-name stb3sapidevwe01 \
-  --queue-name incoming-messages \
+```powershell
+az storage message peek `
+  --account-name stb3sapidevwe01 `
+  --queue-name incoming-messages `
   --auth-mode login
 ```
 
