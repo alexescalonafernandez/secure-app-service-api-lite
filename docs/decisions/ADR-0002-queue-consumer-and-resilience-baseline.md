@@ -40,7 +40,9 @@ Client
   -> sanitized telemetry
 ```
 
-This separates the synchronous API request path from asynchronous message processing. The API owns request validation and enqueueing. The Function owns dequeueing, deserialization, validation of queue content, processing outcomes, retry behavior, poison-message observation, and sanitized telemetry.
+This separates the synchronous API request path from asynchronous message processing. The API owns request validation and enqueueing.
+
+The Function implementation owns deserialization, queue-content validation, processing outcome, and sanitized telemetry. The Azure Functions host runtime owns visibility timeout, retry scheduling, dequeue counting, and poison-queue transfer after a failed invocation.
 
 No Function project, infrastructure resource, workflow, script, test, or configuration is introduced by this ADR.
 
@@ -67,6 +69,8 @@ The producer currently sends raw JSON to `incoming-messages`.
 The Function will initially receive queue content as `string`, then explicitly deserialize and validate the message. The planned queue binding configuration will use raw-message handling through `messageEncoding: none`.
 
 This is intentional. Malformed JSON inserted into the queue must be observable and testable so retry and poison-message behavior can be validated. The implementation must not hide malformed content behind implicit binding deserialization.
+
+For malformed or otherwise unprocessable payloads, the Function must record only sanitized failure metadata and allow the processing exception to propagate to the Azure Functions host. It must not catch the exception and return successfully. This is required so the planned retry and poison-message validation can occur.
 
 ## Identity and RBAC model
 
