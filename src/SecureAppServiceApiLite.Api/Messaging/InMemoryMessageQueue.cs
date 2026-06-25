@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using SecureAppServiceApiLite.Contracts.Messaging;
+using System.Collections.Concurrent;
 
 namespace SecureAppServiceApiLite.Api.Messaging;
 

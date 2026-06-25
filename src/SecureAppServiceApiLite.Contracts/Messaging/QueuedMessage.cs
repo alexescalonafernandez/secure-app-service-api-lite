@@ -1,4 +1,4 @@
-﻿namespace SecureAppServiceApiLite.Api.Messaging;
+﻿namespace SecureAppServiceApiLite.Contracts.Messaging;
 
 public sealed record QueuedMessage(
     Guid Id,
