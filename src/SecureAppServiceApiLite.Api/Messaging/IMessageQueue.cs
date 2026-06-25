@@ -1,4 +1,6 @@
-﻿namespace SecureAppServiceApiLite.Api.Messaging;
+﻿using SecureAppServiceApiLite.Contracts.Messaging;
+
+namespace SecureAppServiceApiLite.Api.Messaging;
 
 public interface IMessageQueue
 {

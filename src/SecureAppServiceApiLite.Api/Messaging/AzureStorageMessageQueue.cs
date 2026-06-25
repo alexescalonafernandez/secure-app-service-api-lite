@@ -1,6 +1,7 @@
 ﻿using Azure.Identity;
 using Azure.Storage.Queues;
 using Microsoft.Extensions.Options;
+using SecureAppServiceApiLite.Contracts.Messaging;
 using System.Text.Json;
 
 namespace SecureAppServiceApiLite.Api.Messaging;

@@ -2,6 +2,7 @@ using FluentValidation;
 using SecureAppServiceApiLite.Api.Contracts;
 using SecureAppServiceApiLite.Api.Messaging;
 using SecureAppServiceApiLite.Api.Validation;
+using SecureAppServiceApiLite.Contracts.Messaging;
 
 var builder = WebApplication.CreateBuilder(args);
 
