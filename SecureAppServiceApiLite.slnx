@@ -2,6 +2,7 @@
   <Folder Name="/src/">
     <Project Path="src/SecureAppServiceApiLite.Api/SecureAppServiceApiLite.Api.csproj" />
     <Project Path="src/SecureAppServiceApiLite.Contracts/SecureAppServiceApiLite.Contracts.csproj" Id="2db3e33c-1241-4f10-9e01-3eddac078a63" />
+    <Project Path="src/SecureAppServiceApiLite.QueueConsumer/SecureAppServiceApiLite.QueueConsumer.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/SecureAppServiceApiLite.Api.Tests/SecureAppServiceApiLite.Api.Tests.csproj" />
