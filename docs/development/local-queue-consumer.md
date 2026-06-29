@@ -137,6 +137,10 @@ Expected outcome:
 
 ## 9. Invalid-message validation
 
+Use these manual validation cases to confirm both malformed JSON and contract-validation failures are rejected safely. These procedures describe expected reproducible results; they do not assume invalid-message validation has already been completed in your local environment.
+
+### 9.1 Invalid JSON validation
+
 In Azure Storage Explorer, add this intentionally malformed raw JSON payload to the `incoming-messages` queue:
 
 ```json
@@ -145,12 +149,37 @@ In Azure Storage Explorer, add this intentionally malformed raw JSON payload to 
 
 Expected outcome:
 
-- The application log reports `FailureReason` as `InvalidJson` and `Outcome=Rejected`.
-- The Functions host reports a processing failure because the consumer rethrows the rejection exception.
-- The structured application log must not include the raw payload or message body.
-- Retries may occur according to Azure Functions host queue-trigger behavior.
+- The structured application log reports `FailureReason=InvalidJson` and `Outcome=Rejected`.
+- The raw payload and body must not appear in the structured application log.
+- The Function rethrows the failure, so the Azure Functions runtime retries the message.
+- In the current local baseline, `host.json` does not override `maxDequeueCount`; therefore the runtime uses its current default retry behavior.
+- After all retry attempts fail, the runtime moves the message from `incoming-messages` to `incoming-messages-poison`.
+- In Azure Storage Explorer, confirm that the message is no longer in `incoming-messages` and appears in `incoming-messages-poison`.
 
-This procedure describes the expected reproducible result. It does not assume invalid-message validation has already been completed in your local environment.
+The poison queue is Azure Functions runtime behavior. Do not describe it as created or managed by application code. The current local baseline is the default five-attempt behavior followed by poison-queue handling; revisit this section when the project later configures explicit queue resilience settings in `host.json`.
+
+### 9.2 Invalid envelope validation
+
+In Azure Storage Explorer, add this syntactically valid JSON payload to the `incoming-messages` queue:
+
+```json
+{
+  "Id": "22222222-2222-2222-2222-222222222222",
+  "Subject": "Envelope validation",
+  "Body": "this-body-must-not-appear-in-the-log",
+  "Priority": "Urgent",
+  "CreatedAtUtc": "2026-06-29T12:00:00Z"
+}
+```
+
+This JSON is valid, but `Priority=Urgent` is not accepted by the consumer.
+
+Expected outcome:
+
+- The structured application log reports `FailureReason=InvalidEnvelope`.
+- The structured application log reports `Outcome=Rejected`.
+- The raw payload and body must not appear in the structured application log.
+- The rejection is rethrown, follows the same Azure Functions runtime retry behavior, and can end in `incoming-messages-poison` after all retry attempts fail.
 
 ## 10. Stop and reset
 
@@ -166,7 +195,13 @@ Stop Azurite from the VS Code Command Palette:
 Azurite: Close
 ```
 
-To reset local queue state:
+To reset queue contents after validation:
+
+1. In Azure Storage Explorer, clear or delete `incoming-messages`.
+2. In Azure Storage Explorer, clear or delete `incoming-messages-poison` if it was created by runtime poison-message handling.
+3. Treat poison messages as potentially sensitive because they contain the original queue payload. Do not copy poison-message contents into logs, issues, pull requests, or documentation.
+
+To reset all local emulator state:
 
 1. Stop the Function host.
 2. Stop Azurite.
@@ -175,7 +210,7 @@ To reset local queue state:
 5. Start Azurite again with `Azurite: Start`.
 6. Recreate the `incoming-messages` queue in Azure Storage Explorer.
 
-Expected outcome: the local emulator starts with clean storage state and a newly created empty queue.
+Expected outcome: the local emulator starts with clean storage state and a newly created empty queue. The `incoming-messages-poison` queue should be absent until the Azure Functions runtime creates it after failed retry attempts.
 
 ## 11. Safety and Git hygiene
 
