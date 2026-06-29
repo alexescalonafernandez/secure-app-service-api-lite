@@ -179,7 +179,9 @@ Expected outcome:
 - The structured application log reports `FailureReason=InvalidEnvelope`.
 - The structured application log reports `Outcome=Rejected`.
 - The raw payload and body must not appear in the structured application log.
-- The rejection is rethrown, follows the same Azure Functions runtime retry behavior, and can end in `incoming-messages-poison` after all retry attempts fail.
+- The Function rethrows the rejection, so the Azure Functions runtime retries the message.
+- After all five attempts fail in the current local baseline, the runtime moves the message from `incoming-messages` to `incoming-messages-poison`.
+- In Azure Storage Explorer, confirm that the message is no longer in `incoming-messages` and appears in `incoming-messages-poison`.
 
 ## 10. Stop and reset
 
