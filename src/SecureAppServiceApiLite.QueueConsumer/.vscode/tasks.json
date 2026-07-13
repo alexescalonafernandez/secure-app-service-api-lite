@@ -4,9 +4,9 @@
     {
       "label": "Run Queue Consumer locally",
       "type": "process",
-      "command": "func",
+      "command": "dotnet",
       "args": [
-        "start"
+        "run"
       ],
       "options": {
         "cwd": "${workspaceFolder}"
