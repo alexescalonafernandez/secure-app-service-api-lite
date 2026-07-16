@@ -1,8 +1,10 @@
-# Inspect deployed B3.E1 Azure resources.
+# Inspect deployed B3 Azure resources.
 
 $RG_NAME = "rg-b3-secure-api-dev-we-01"
 $APP_NAME = "app-b3-secure-api-dev-we-01"
+$FUNCTION_APP_NAME = "func-b3-secure-api-dev-we-01"
 $STORAGE_ACCOUNT_NAME = "stb3sapidevwe01"
+$FUNCTION_HOST_STORAGE_ACCOUNT_NAME = "stfuncb3sapidevwe01"
 $QUEUE_NAME = "incoming-messages"
 
 # List resources in the resource group.
@@ -22,6 +24,43 @@ az webapp config appsettings list `
   --resource-group $RG_NAME `
   --name $APP_NAME `
   --query "[].name" `
+  --output table
+
+# Show Function App summary.
+az functionapp show `
+  --resource-group $RG_NAME `
+  --name $FUNCTION_APP_NAME `
+  --query "{name:name, state:state, defaultHostName:defaultHostName, httpsOnly:httpsOnly, kind:kind, identity:identity.type}" `
+  --output table
+
+# Show Function App app settings names only.
+az functionapp config appsettings list `
+  --resource-group $RG_NAME `
+  --name $FUNCTION_APP_NAME `
+  --query "[].name" `
+  --output table
+
+# Show Function App principal ID.
+$FUNCTION_PRINCIPAL_ID = az functionapp identity show `
+  --resource-group $RG_NAME `
+  --name $FUNCTION_APP_NAME `
+  --query principalId `
+  --output tsv
+
+$FUNCTION_PRINCIPAL_ID
+
+# Show Function principal role assignments on Function host storage.
+az role assignment list `
+  --assignee $FUNCTION_PRINCIPAL_ID `
+  --scope "/subscriptions/$(az account show --query id --output tsv)/resourceGroups/$RG_NAME/providers/Microsoft.Storage/storageAccounts/$FUNCTION_HOST_STORAGE_ACCOUNT_NAME" `
+  --query "[].{role:roleDefinitionName, scope:scope}" `
+  --output table
+
+# Show Function principal role assignments on producer source storage.
+az role assignment list `
+  --assignee $FUNCTION_PRINCIPAL_ID `
+  --scope "/subscriptions/$(az account show --query id --output tsv)/resourceGroups/$RG_NAME/providers/Microsoft.Storage/storageAccounts/$STORAGE_ACCOUNT_NAME" `
+  --query "[].{role:roleDefinitionName, scope:scope}" `
   --output table
 
 # Show Storage Queue exists.
