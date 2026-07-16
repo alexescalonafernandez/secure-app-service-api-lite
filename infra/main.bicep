@@ -80,7 +80,7 @@ module functionApp 'modules/function-app.bicep' = {
     hostStorageQueueServiceUri: functionHostStorage.outputs.queueServiceUri
     hostStorageTableServiceUri: functionHostStorage.outputs.tableServiceUri
     deploymentContainerUri: functionHostStorage.outputs.deploymentContainerUri
-    sourceQueueServiceUri: 'https://${storage.outputs.storageAccountName}.queue.${environment().suffixes.storage}'
+    sourceQueueServiceUri: 'https://${storage.outputs.storageAccountName}.queue.${az.environment().suffixes.storage}'
     applicationInsightsConnectionString: observability.outputs.applicationInsightsConnectionString
   }
 }
