@@ -41,12 +41,18 @@ The Function App should eventually define:
 
 * `FUNCTIONS_WORKER_RUNTIME=dotnet-isolated`
 * `APPLICATIONINSIGHTS_CONNECTION_STRING=<existing Application Insights connection string>`
-* `AzureWebJobsStorage__accountName=<Function host storage account name>`
+* `AzureWebJobsStorage__credential=managedidentity`
+* `AzureWebJobsStorage__blobServiceUri=https://<function-host-storage-account>.blob.core.windows.net`
+* `AzureWebJobsStorage__queueServiceUri=https://<function-host-storage-account>.queue.core.windows.net`
+* `AzureWebJobsStorage__tableServiceUri=https://<function-host-storage-account>.table.core.windows.net`
+* `IncomingMessagesStorage__credential=managedidentity`
 * `IncomingMessagesStorage__queueServiceUri=https://<producer-storage-account>.queue.core.windows.net`
 
 Do not use Storage Account connection strings for the Queue trigger.
 
-Do not add `IncomingMessagesStorage__credential` for system-assigned managed identity unless later validation proves it is required. Azure Functions uses the system-assigned managed identity by default when running in Azure.
+Azure-hosted identity-based connection settings explicitly set `__credential=managedidentity`. Do not add client ID or managed identity resource ID settings because the Function App uses its system-assigned managed identity.
+
+Local development should still avoid `__credential=managedidentity` unless explicitly testing identity-based cloud connections locally.
 
 ## Identity and RBAC design
 
