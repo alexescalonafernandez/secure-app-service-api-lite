@@ -1,6 +1,7 @@
 param(
     [string]$ResourceGroupName = "rg-b3-secure-api-dev-we-01",
     [string]$WebAppName = "app-b3-secure-api-dev-we-01",
+    [string]$FunctionAppName = "func-b3-secure-api-dev-we-01",
     [string]$GitHubOwner = "alexescalonafernandez",
     [string]$GitHubRepo = "secure-app-service-api-lite",
     [string]$GitHubEnvironment = "dev",
@@ -61,6 +62,7 @@ $subscriptionId = Get-AzCliValue "az account show --query id -o tsv"
 $tenantId = Get-AzCliValue "az account show --query tenantId -o tsv"
 
 $webAppScope = "/subscriptions/$subscriptionId/resourceGroups/$ResourceGroupName/providers/Microsoft.Web/sites/$WebAppName"
+$functionAppScope = "/subscriptions/$subscriptionId/resourceGroups/$ResourceGroupName/providers/Microsoft.Web/sites/$FunctionAppName"
 $expectedSubject = "repo:$GitHubOwner/$GitHubRepo`:environment:$GitHubEnvironment"
 $expectedIssuer = "https://token.actions.githubusercontent.com"
 $expectedAudience = "api://AzureADTokenExchange"
@@ -78,6 +80,18 @@ Add-Check `
     -Name "Web App exists" `
     -Passed ([bool]$webAppId) `
     -Detail "Web App: $WebAppName"
+
+$functionAppId = Get-AzCliValue @'
+az functionapp show `
+  --resource-group "$ResourceGroupName" `
+  --name "$FunctionAppName" `
+  --query id -o tsv
+'@
+
+Add-Check `
+    -Name "Function App exists" `
+    -Passed ([bool]$functionAppId) `
+    -Detail "Function App: $FunctionAppName"
 
 $appId = Get-AzCliValue @'
 az ad app list `
@@ -179,6 +193,24 @@ Add-Check `
     -Passed $rbacOk `
     -Detail "Scope: $webAppScope"
 
+$functionRbacOk = $false
+
+if ($spObjectId) {
+    $functionRbacCount = Get-AzCliValue @'
+az role assignment list `
+  --assignee-object-id "$spObjectId" `
+  --scope "$functionAppScope" `
+  --query "[?roleDefinitionName=='$RoleName'] | length(@)" -o tsv
+'@
+
+    $functionRbacOk = $functionRbacCount -ne '0'
+}
+
+Add-Check `
+    -Name "$RoleName role assignment exists at Function App scope" `
+    -Passed $functionRbacOk `
+    -Detail "Scope: $functionAppScope"
+
 Write-Step "Validation results"
 
 $failed = @($checks | Where-Object { -not $_.Passed })
@@ -201,8 +233,10 @@ Write-Host "  - AZURE_TENANT_ID"
 Write-Host "  - AZURE_SUBSCRIPTION_ID"
 Write-Host "- Environment variables configured:"
 Write-Host "  - AZURE_WEBAPP_NAME"
+Write-Host "  - AZURE_FUNCTIONAPP_NAME"
 Write-Host "  - DOTNET_VERSION"
 Write-Host "  - PROJECT_PATH"
+Write-Host "  - FUNCTION_PROJECT_PATH"
 Write-Host ""
 
 Write-Host "Resolved tenant/subscription for reference:"
