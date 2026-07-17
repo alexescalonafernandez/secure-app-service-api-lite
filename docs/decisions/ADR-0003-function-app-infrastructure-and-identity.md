@@ -37,9 +37,15 @@ Recommended baseline:
 
 ## App settings design
 
-The Function App should eventually define:
+Flex Consumption configures the Functions language runtime through `functionAppConfig.runtime`, not through legacy runtime app settings. For this Function App, keep `functionAppConfig.runtime.name=dotnet-isolated` and `functionAppConfig.runtime.version=8.0`.
 
-* `FUNCTIONS_WORKER_RUNTIME=dotnet-isolated`
+Deployment validation found that Flex Consumption sites must not define either of these app settings:
+
+* `FUNCTIONS_WORKER_RUNTIME`
+* `FUNCTIONS_EXTENSION_VERSION`
+
+The Function App should define these app settings:
+
 * `APPLICATIONINSIGHTS_CONNECTION_STRING=<existing Application Insights connection string>`
 * `AzureWebJobsStorage__credential=managedidentity`
 * `AzureWebJobsStorage__blobServiceUri=https://<function-host-storage-account>.blob.core.windows.net`
