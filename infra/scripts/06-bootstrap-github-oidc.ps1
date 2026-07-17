@@ -1,6 +1,7 @@
 param(
     [string]$ResourceGroupName = "rg-b3-secure-api-dev-we-01",
     [string]$WebAppName = "app-b3-secure-api-dev-we-01",
+    [string]$FunctionAppName = "func-b3-secure-api-dev-we-01",
     [string]$GitHubOwner = "alexescalonafernandez",
     [string]$GitHubRepo = "secure-app-service-api-lite",
     [string]$GitHubEnvironment = "dev",
@@ -46,6 +47,7 @@ $subscriptionId = Get-AzCliValue "az account show --query id -o tsv"
 $tenantId = Get-AzCliValue "az account show --query tenantId -o tsv"
 
 $webAppScope = "/subscriptions/$subscriptionId/resourceGroups/$ResourceGroupName/providers/Microsoft.Web/sites/$WebAppName"
+$functionAppScope = "/subscriptions/$subscriptionId/resourceGroups/$ResourceGroupName/providers/Microsoft.Web/sites/$FunctionAppName"
 $expectedSubject = "repo:$GitHubOwner/$GitHubRepo`:environment:$GitHubEnvironment"
 $expectedIssuer = "https://token.actions.githubusercontent.com"
 $expectedAudience = "api://AzureADTokenExchange"
@@ -60,6 +62,18 @@ az webapp show `
 
 if (-not $webAppId) {
     throw "Web App '$WebAppName' in resource group '$ResourceGroupName' was not found. Deploy B3.E1/B3.E2 infrastructure first."
+}
+
+Write-Step "Verifying Function App exists"
+$functionAppId = Get-AzCliValue @'
+az functionapp show `
+  --resource-group "$ResourceGroupName" `
+  --name "$FunctionAppName" `
+  --query id -o tsv
+'@
+
+if (-not $functionAppId) {
+    throw "Function App '$FunctionAppName' in resource group '$ResourceGroupName' was not found. Deploy B3.E5 infrastructure first."
 }
 
 Write-Step "Resolving App Registration '$AppRegistrationName'"
@@ -197,6 +211,31 @@ else {
     Write-Host "Role assignment already exists." -ForegroundColor Green
 }
 
+Write-Step "Ensuring RBAC assignment exists at Function App scope"
+$functionRbacExists = Get-AzCliValue @'
+az role assignment list `
+  --assignee-object-id "$spObjectId" `
+  --scope "$functionAppScope" `
+  --query "[?roleDefinitionName=='$RoleName'] | length(@)" -o tsv
+'@
+
+if ($functionRbacExists -eq '0') {
+    Write-Host "Role assignment missing. Creating '$RoleName' on Function App scope..." -ForegroundColor Yellow
+
+    $null = Get-AzCliValue @'
+az role assignment create `
+  --assignee-object-id "$spObjectId" `
+  --role "$RoleName" `
+  --scope "$functionAppScope" `
+  --query id -o tsv
+'@
+
+    Write-Host "Role assignment created." -ForegroundColor Green
+}
+else {
+    Write-Host "Role assignment already exists." -ForegroundColor Green
+}
+
 Write-Step "Manual GitHub Environment configuration required"
 
 Write-Host "Configure the following in GitHub Environment '$GitHubEnvironment' manually:" -ForegroundColor Yellow
@@ -210,8 +249,10 @@ Write-Host ""
 
 Write-Host "Environment variables:"
 Write-Host "  AZURE_WEBAPP_NAME = $WebAppName"
+Write-Host "  AZURE_FUNCTIONAPP_NAME = $FunctionAppName"
 Write-Host "  DOTNET_VERSION = 8.0.x"
 Write-Host "  PROJECT_PATH = src/SecureAppServiceApiLite.Api/SecureAppServiceApiLite.Api.csproj"
+Write-Host "  FUNCTION_PROJECT_PATH = src/SecureAppServiceApiLite.QueueConsumer/SecureAppServiceApiLite.QueueConsumer.csproj"
 Write-Host ""
 
 Write-Host "Resolved values for manual GitHub setup:"
@@ -219,8 +260,10 @@ Write-Host "  AZURE_CLIENT_ID = $appId"
 Write-Host "  AZURE_TENANT_ID = $tenantId"
 Write-Host "  AZURE_SUBSCRIPTION_ID = $subscriptionId"
 Write-Host "  AZURE_WEBAPP_NAME = $WebAppName"
+Write-Host "  AZURE_FUNCTIONAPP_NAME = $FunctionAppName"
 Write-Host "  DOTNET_VERSION = 8.0.x"
 Write-Host "  PROJECT_PATH = src/SecureAppServiceApiLite.Api/SecureAppServiceApiLite.Api.csproj"
+Write-Host "  FUNCTION_PROJECT_PATH = src/SecureAppServiceApiLite.QueueConsumer/SecureAppServiceApiLite.QueueConsumer.csproj"
 Write-Host ""
 
 Write-Host "Reminder: GitHub Environment '$GitHubEnvironment', secrets, and variables are NOT automated by this script." -ForegroundColor Yellow
