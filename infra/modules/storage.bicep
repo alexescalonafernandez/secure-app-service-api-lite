@@ -7,6 +7,8 @@ param storageAccountName string
 @description('Storage Queue name.')
 param queueName string
 
+var poisonQueueName = '${queueName}-poison'
+
 resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   name: storageAccountName
   location: location
@@ -33,5 +35,11 @@ resource queue 'Microsoft.Storage/storageAccounts/queueServices/queues@2023-05-0
   parent: queueService
 }
 
+resource poisonQueue 'Microsoft.Storage/storageAccounts/queueServices/queues@2023-05-01' = {
+  name: poisonQueueName
+  parent: queueService
+}
+
 output storageAccountName string = storageAccount.name
 output queueName string = queue.name
+output poisonQueueName string = poisonQueue.name

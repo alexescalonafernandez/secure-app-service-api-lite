@@ -88,8 +88,11 @@ Required roles:
 
 * `Storage Queue Data Reader`
 * `Storage Queue Data Message Processor`
+* `Storage Queue Data Message Sender`
 
 Reason: the Function queue trigger must be able to read, process, update, and delete queue messages according to Azure Functions queue trigger behavior.
+
+Initial least-privilege validation showed that `Storage Queue Data Reader` and `Storage Queue Data Message Processor` are sufficient for normal trigger processing. Azure retry and poison-message validation then showed that poison queue handling also requires enqueue permission: after retry exhaustion, the Functions runtime copies failed messages to the poison queue. The design explicitly provisions `incoming-messages-poison` and grants `Storage Queue Data Message Sender` to the Function managed identity on the source storage account. This avoids granting the broader `Storage Queue Data Contributor` role while still allowing the Functions runtime to copy failed messages to the poison queue.
 
 Use storage-account scope for the first implementation to support the source queue and runtime poison queue behavior. More granular scoping can be evaluated later.
 
