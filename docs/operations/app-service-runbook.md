@@ -89,6 +89,8 @@ Expected behavior:
 
 ## Application Insights checks
 
+For Application Insights queries used during API, queue, Function, retry, and poison-message validation, see [`application-insights-kql-cheatsheet.md`](./application-insights-kql-cheatsheet.md).
+
 Application Insights request telemetry depends on these prerequisites:
 
 - `APPLICATIONINSIGHTS_CONNECTION_STRING` configured in App Service through Bicep.
