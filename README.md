@@ -5,7 +5,7 @@ Secure App Service API Lite is **Project B3** of the Azure Projects + AI Deliver
 Its goal is to build a lightweight, AZ-204-oriented ASP.NET Core Minimal API that can evolve from local development to Azure-hosted production patterns.
 
 ## Current milestone
-**B3.E4 - Operational hardening and observability validation (complete)**
+**B3.E5 - Queue consumer and resilience baseline (complete)**
 
 ## Milestone status
 - **B3.E0 - Project foundation + local Minimal API**: complete.
@@ -13,8 +13,9 @@ Its goal is to build a lightweight, AZ-204-oriented ASP.NET Core Minimal API tha
 - **B3.E2 - Managed Identity + RBAC + real Azure Storage Queue integration path**: complete.
 - **B3.E3 - GitHub Actions deployment with OIDC**: complete.
 - **B3.E4 - Operational hardening and observability validation**: complete.
+- **B3.E5 - Queue consumer and resilience baseline**: complete.
 
-B3.E4 validated Application Insights telemetry for successful and invalid requests and documented an App Service operations runbook.
+B3.E5 validated the Azure Storage Queue producer and Azure Function consumer path, including Application Insights telemetry, retry behavior, poison queue handling, and sanitized logging. See [B3.E5 milestone documentation](docs/milestones/B3.E5-queue-consumer-resilience-baseline.md) and the [Application Insights KQL troubleshooting guide](docs/operations/application-insights-kql-cheatsheet.md).
 
 ## Current implemented scope
 At this stage, the repository includes:
@@ -28,6 +29,9 @@ At this stage, the repository includes:
 - FluentValidation-based request validation.
 - Swagger/OpenAPI in Development.
 - Basic endpoint and validator tests.
+- Azure Storage Queue producer path.
+- Azure Function queue consumer baseline.
+- Application Insights troubleshooting queries for API and Function validation.
 
 ## Endpoints
 - `GET /health`
@@ -77,13 +81,11 @@ dotnet test
 ```
 
 ## Still out of scope
-The following are intentionally not included yet after B3.E4:
-- Queue consumer and resilience baseline.
+The following are intentionally not included yet after B3.E5:
+- Automated poison-message reprocessing.
+- Alert rules and dashboards.
 - Key Vault integration.
 - Production networking hardening (private endpoints, custom domains, advanced network controls).
-
-## Next milestone preview
-B3.E5 - Queue consumer and resilience baseline.
 
 ---
 
