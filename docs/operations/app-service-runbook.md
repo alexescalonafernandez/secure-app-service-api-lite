@@ -208,6 +208,7 @@ A permission result from one identity must not be treated as evidence about the 
 
 - Deployment remains manual.
 - No alert rules or dashboards exist.
-- No explicit structured application logging exists.
-- No queue consumer, retry policy, or dead-letter handling exists.
+- API-side explicit structured application logging remains minimal.
+- Queue retry behavior currently relies on Azure Functions runtime defaults; no custom retry tuning is configured.
+- Poison-message handling exists through `incoming-messages-poison`, but no automated poison-message reprocessing workflow exists.
 - Local Azure CLI queue inspection may require Storage Queue data-plane permissions.
