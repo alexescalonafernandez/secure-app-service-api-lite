@@ -18,6 +18,9 @@ param locationCode string = 'we'
 @description('Instance number used for Azure resource naming.')
 param instance string = '01'
 
+@description('Optional email receiver for operational alerts. Leave empty to create the Action Group without email receivers.')
+param actionGroupEmail string = ''
+
 var resourcePrefix = 'b3-secure-api-${environment}-${locationCode}-${instance}'
 var storageAccountName = 'st${projectCode}${environment}${locationCode}${instance}'
 var queueName = 'incoming-messages'
@@ -29,6 +32,9 @@ var functionAppName = 'func-${resourcePrefix}'
 var functionPlanName = 'fcp-${resourcePrefix}'
 var functionHostStorageAccountName = 'stfunc${projectCode}${environment}${locationCode}${instance}'
 var functionDeploymentContainerName = 'app-package-${functionAppName}'
+var actionGroupName = 'ag-${resourcePrefix}'
+var queueBacklogMetricAlertName = 'ma-${resourcePrefix}-queue-backlog'
+var sourceQueueServiceResourceId = resourceId('Microsoft.Storage/storageAccounts/queueServices', storage.outputs.storageAccountName, 'default')
 
 module storage 'modules/storage.bicep' = {
   name: 'storage'
@@ -36,6 +42,17 @@ module storage 'modules/storage.bicep' = {
     location: location
     storageAccountName: storageAccountName
     queueName: queueName
+  }
+}
+
+module monitoringAlerts 'modules/monitoring-alerts.bicep' = {
+  name: 'monitoring-alerts'
+  params: {
+    location: location
+    actionGroupName: actionGroupName
+    metricAlertName: queueBacklogMetricAlertName
+    queueServiceResourceId: sourceQueueServiceResourceId
+    actionGroupEmail: actionGroupEmail
   }
 }
 
@@ -121,3 +138,5 @@ output functionAppPrincipalId string = functionApp.outputs.functionAppPrincipalI
 output functionHostStorageBlobDataOwnerRoleAssignmentName string = functionRbac.outputs.functionHostStorageBlobDataOwnerRoleAssignmentName
 output functionSourceQueueDataReaderRoleAssignmentName string = functionRbac.outputs.functionSourceQueueDataReaderRoleAssignmentName
 output functionSourceQueueDataMessageProcessorRoleAssignmentName string = functionRbac.outputs.functionSourceQueueDataMessageProcessorRoleAssignmentName
+output actionGroupName string = monitoringAlerts.outputs.actionGroupName
+output queueBacklogMetricAlertName string = monitoringAlerts.outputs.queueBacklogMetricAlertName

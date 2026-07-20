@@ -65,3 +65,14 @@ Recommended order:
 - No application deployment yet. The infrastructure includes the Queue Consumer Function App host only; Function code deployment remains out of scope.
 - Infrastructure deployment is manual and performed through `.azcli` scripts.
 - `99-teardown.azcli` deletes the full dev resource group to avoid ongoing cost.
+
+## B3.E6 operational alerting baseline
+
+The infrastructure baseline includes a minimal Azure Monitor alerting setup for the producer Storage Queue path described in ADR-0004:
+
+- An Azure Monitor Action Group named from the shared resource prefix.
+- An Azure Monitor Metric Alert for queue backlog / poison-suspected detection.
+- The alert evaluates `QueueMessageCount > 0` on the Storage Queue service every five minutes.
+- `QueueMessageCount` is evaluated at the queue-service level, so this is intentionally not treated as a guaranteed poison-queue-specific signal.
+- `actionGroupEmail` can be supplied during deployment when email notification validation is desired.
+- Keep `actionGroupEmail = ''` in committed dev parameters so no real email address is stored in source control.
