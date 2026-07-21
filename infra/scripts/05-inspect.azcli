@@ -6,6 +6,9 @@ $FUNCTION_APP_NAME = "func-b3-secure-api-dev-we-01"
 $STORAGE_ACCOUNT_NAME = "stb3sapidevwe01"
 $FUNCTION_HOST_STORAGE_ACCOUNT_NAME = "stfuncb3sapidevwe01"
 $QUEUE_NAME = "incoming-messages"
+$POISON_QUEUE_NAME = "incoming-messages-poison"
+$ACTION_GROUP_NAME = "ag-b3-secure-api-dev-we-01"
+$QUEUE_BACKLOG_ALERT_NAME = "ma-b3-secure-api-dev-we-01-queue-backlog"
 
 # List resources in the resource group.
 az resource list `
@@ -68,4 +71,32 @@ az storage queue exists `
   --account-name $STORAGE_ACCOUNT_NAME `
   --name $QUEUE_NAME `
   --auth-mode login `
+  --output table
+
+# Show poison Storage Queue exists.
+az storage queue exists `
+  --account-name $STORAGE_ACCOUNT_NAME `
+  --name $POISON_QUEUE_NAME `
+  --auth-mode login `
+  --output table
+
+# Show B3.E6 Action Group summary.
+az monitor action-group show `
+  --resource-group $RG_NAME `
+  --name $ACTION_GROUP_NAME `
+  --query "{name:name, enabled:enabled, groupShortName:groupShortName, emailReceivers:emailReceivers[].name}" `
+  --output table
+
+# Show B3.E6 queue backlog Metric Alert summary.
+az monitor metrics alert show `
+  --resource-group $RG_NAME `
+  --name $QUEUE_BACKLOG_ALERT_NAME `
+  --query "{name:name, enabled:enabled, severity:severity, evaluationFrequency:evaluationFrequency, windowSize:windowSize, targetResourceType:targetResourceType, description:description}" `
+  --output table
+
+# Show B3.E6 queue backlog Metric Alert criteria.
+az monitor metrics alert show `
+  --resource-group $RG_NAME `
+  --name $QUEUE_BACKLOG_ALERT_NAME `
+  --query "criteria.allOf[].{metricName:metricName, metricNamespace:metricNamespace, timeAggregation:timeAggregation, operator:operator, threshold:threshold}" `
   --output table

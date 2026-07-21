@@ -72,7 +72,7 @@ The infrastructure baseline includes a minimal Azure Monitor alerting setup for 
 
 - An Azure Monitor Action Group named from the shared resource prefix.
 - An Azure Monitor Metric Alert for queue backlog / poison-suspected detection.
-- The alert evaluates `QueueMessageCount > 0` on the Storage Queue service every five minutes.
+- The alert evaluates `QueueMessageCount > 0` on the Storage Queue service using an hourly evaluation/window because `QueueMessageCount` is an hourly capacity metric.
 - `QueueMessageCount` is evaluated at the queue-service level, so this is intentionally not treated as a guaranteed poison-queue-specific signal.
 - `actionGroupEmail` can be supplied during deployment when email notification validation is desired.
 - Keep `actionGroupEmail = ''` in committed dev parameters so no real email address is stored in source control.
