@@ -15,7 +15,7 @@ Its goal is to build a lightweight, AZ-204-oriented ASP.NET Core Minimal API tha
 - **B3.E4 - Operational hardening and observability validation**: complete.
 - **B3.E5 - Queue consumer and resilience baseline**: complete.
 
-B3.E5 validated the Azure Storage Queue producer and Azure Function consumer path, including Application Insights telemetry, retry behavior, poison queue handling, and sanitized logging. See [B3.E5 milestone documentation](docs/milestones/B3.E5-queue-consumer-resilience-baseline.md) and the [Application Insights KQL troubleshooting guide](docs/operations/application-insights-kql-cheatsheet.md).
+B3.E5 validated the Azure Storage Queue producer and Azure Function consumer path, including Application Insights telemetry, retry behavior, poison queue handling, and sanitized logging. See [B3.E5 milestone documentation](docs/milestones/B3.E5-queue-consumer-resilience-baseline.md), the [Application Insights KQL troubleshooting guide](docs/operations/application-insights-kql-cheatsheet.md), and the [poison message response runbook](docs/operations/poison-message-runbook.md).
 
 ## Current implemented scope
 At this stage, the repository includes:

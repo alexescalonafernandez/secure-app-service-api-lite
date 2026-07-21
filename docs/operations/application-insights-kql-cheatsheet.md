@@ -252,3 +252,9 @@ Negative path:
 - [ ] `requests` contains failed Function invocations.
 - [ ] Message eventually appears in `incoming-messages-poison`.
 - [ ] No body/payload appears in telemetry.
+
+## Related runbook
+
+For operational response when the queue backlog / poison-suspected alert fires, see:
+
+[Poison message response runbook](poison-message-runbook.md)
