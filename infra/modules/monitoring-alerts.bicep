@@ -19,11 +19,11 @@ param actionGroupEnabled bool = true
 @description('Whether the metric alert is enabled.')
 param metricAlertEnabled bool = true
 
-@description('How often the metric alert is evaluated.')
-param evaluationFrequency string = 'PT5M'
+@description('How often the metric alert is evaluated. QueueMessageCount is an hourly capacity metric.')
+param evaluationFrequency string = 'PT1H'
 
-@description('Time window over which the metric alert is evaluated.')
-param windowSize string = 'PT5M'
+@description('Time window over which the metric alert is evaluated. QueueMessageCount is an hourly capacity metric.')
+param windowSize string = 'PT1H'
 
 @description('Queue message count threshold for the backlog alert.')
 param threshold int = 0
