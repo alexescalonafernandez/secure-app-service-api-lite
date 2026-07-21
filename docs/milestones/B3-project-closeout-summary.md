@@ -99,9 +99,3 @@ After B3, good next directions include:
 - A .NET + AI project after the Azure operational base is stronger.
 
 Do not choose the next project in this document. The decision should be made after review with the mentor director.
-
-## Transferable summary for B3 mentor director
-
-```text
-B3 completó un proyecto Azure/.NET de portfolio que evolucionó desde una Minimal API local hasta una arquitectura cloud asíncrona con App Service, Storage Queue, Azure Function, Managed Identity, RBAC, GitHub Actions OIDC, Application Insights, retry/poison handling y Azure Monitor alerting. El proyecto dejó evidencia verificable en GitHub, documentación de decisiones, runbooks operativos y validaciones reales en Azure. Durante el delivery se diagnosticaron problemas reales de configuración Flex Consumption, permisos RBAC para poison queue y restricciones de métricas Azure Monitor, lo que refuerza su valor como experiencia práctica de cloud delivery y troubleshooting.
-```
