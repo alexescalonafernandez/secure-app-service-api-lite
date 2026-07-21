@@ -4,8 +4,8 @@
 Secure App Service API Lite is **Project B3** of the Azure Projects + AI Delivery Lab roadmap.
 Its goal is to build a lightweight, AZ-204-oriented ASP.NET Core Minimal API that can evolve from local development to Azure-hosted production patterns.
 
-## Current milestone
-**B3.E5 - Queue consumer and resilience baseline (complete)**
+## Current project status
+**Project B3 - Secure App Service API Lite: completed.**
 
 ## Milestone status
 - **B3.E0 - Project foundation + local Minimal API**: complete.
@@ -14,8 +14,9 @@ Its goal is to build a lightweight, AZ-204-oriented ASP.NET Core Minimal API tha
 - **B3.E3 - GitHub Actions deployment with OIDC**: complete.
 - **B3.E4 - Operational hardening and observability validation**: complete.
 - **B3.E5 - Queue consumer and resilience baseline**: complete.
+- **B3.E6 - Operational alerts and dashboard baseline**: complete.
 
-B3.E5 validated the Azure Storage Queue producer and Azure Function consumer path, including Application Insights telemetry, retry behavior, poison queue handling, and sanitized logging. See [B3.E5 milestone documentation](docs/milestones/B3.E5-queue-consumer-resilience-baseline.md), the [Application Insights KQL troubleshooting guide](docs/operations/application-insights-kql-cheatsheet.md), and the [poison message response runbook](docs/operations/poison-message-runbook.md).
+B3.E6 completed the project by adding the minimal operational alerts baseline for queue backlog / poison-suspected conditions. See [B3.E6 milestone documentation](docs/milestones/B3.E6-operational-alerts-dashboard-baseline.md), the [Project B3 closeout summary](docs/milestones/B3-project-closeout-summary.md), and the [poison message response runbook](docs/operations/poison-message-runbook.md).
 
 ## Current implemented scope
 At this stage, the repository includes:
@@ -32,6 +33,7 @@ At this stage, the repository includes:
 - Azure Storage Queue producer path.
 - Azure Function queue consumer baseline.
 - Application Insights troubleshooting queries for API and Function validation.
+- Azure Monitor queue backlog / poison-suspected alert baseline.
 
 ## Endpoints
 - `GET /health`
@@ -81,9 +83,9 @@ dotnet test
 ```
 
 ## Still out of scope
-The following are intentionally not included yet after B3.E5:
+The following remain intentionally out of scope after Project B3:
 - Automated poison-message reprocessing.
-- Alert rules and dashboards.
+- Production-grade dashboards/workbooks.
 - Key Vault integration.
 - Production networking hardening (private endpoints, custom domains, advanced network controls).
 
